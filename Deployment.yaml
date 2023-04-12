@@ -1,0 +1,80 @@
+### criado por caio grigoleto - curso kubernets ###
+---
+#### Deployment para o banco #####
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgre
+spec:
+  selector:
+    matchLabels:
+      app: postgre
+  template:
+    metadata:
+      labels:
+        app: postgre
+    spec:
+      containers:
+      - name: postgre
+        image: postgres:15.0
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "Pg#123"
+        - name: POSTGRES_USER
+          value: "kubenews"
+        - name: POSTGRES_DB
+          value: "kubenews"
+---
+
+#### Service para o banco #####
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgre
+spec:
+  selector:
+    app: postgre
+  ports:
+  - port: 5432
+type: ClusterIP
+
+---
+
+#### Deployment para o aplicativo do node #####
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-news
+spec:
+  selector:
+    matchLabels:
+      app: kube-news
+  template:
+    metadata:
+      labels:
+        app: kube-news
+    spec:
+      containers:
+      - name: kube-news
+        image: caiogrigoleto/kube-news:v1
+        ports:
+        - containerPort: 80
+
+---
+
+#### Service para o aplicativo do node #####
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-news
+spec:
+  selector:
+    app: kube-news
+  ports:
+  - port: 80
+    targetPort: 8080
+    nodePort: 30080
+    protocol: TCP
+type: NodePort
