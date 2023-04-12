@@ -38,7 +38,7 @@ spec:
     app: postgre
   ports:
   - port: 5432
-type: ClusterIP
+  type: ClusterIP
 
 ---
 
@@ -58,9 +58,18 @@ spec:
     spec:
       containers:
       - name: kube-news
-        image: caiogrigoleto/kube-news:v1
+        image: caiogrigoleto/kube-news:v2
         ports:
         - containerPort: 80
+        env:
+        - name: DB_PASSWORD
+          value: "Pg#123"
+        - name: DB_USER
+          value: "kubenews"
+        - name: DB_DATABASE
+          value: "kubenews"
+        - name: DB_HOST
+          value: "postgre"
 
 ---
 
@@ -75,6 +84,6 @@ spec:
   ports:
   - port: 80
     targetPort: 8080
-    nodePort: 30080
+    nodePort: 30000
     protocol: TCP
-type: NodePort
+  type: NodePort
