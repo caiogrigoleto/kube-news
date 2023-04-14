@@ -59,7 +59,7 @@ spec:
     spec:
       containers:
       - name: kube-news
-        image: caiogrigoleto/kube-news:v2
+        image: caiogrigoleto/kube-news:{{TAG}}
         ports:
         - containerPort: 8080
         env:
